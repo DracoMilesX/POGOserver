@@ -1,0 +1,42 @@
+##
+# Configuration Apache
+##
+web:
+ restart: always
+ image: nimmis/alpine-apache
+ ports:
+  - "20000:80"
+  - "20001:443"
+ volumes:
+  - /volume4/Drive4/Lab/Docker/pogo/web/:/web/
+ links:
+  - db:db
+
+##
+# Configuration MYSQL
+##
+db:
+ image: mysql
+ restart: always
+ ports:
+  - "20003:3306"
+ volumes:
+  - /volume4/Drive4/Lab/Docker/pogo/db/:/var/lib/mysql/
+ environment:
+  - MYSQL_ROOT_PASSWORD=root
+# - MYSQL_TCP_PORT=3306
+
+##
+# Configuration POGOServer
+##
+pogoserver:
+ build: . # It will use DockerFile
+ restart: always
+# command:  -v .:/POGOserver/
+ ports:
+  - "20004:3000"
+ volumes:
+  - /volume4/Drive4/Lab/Docker/pogo/server/:/POGOserver/
+ links :
+  - db:db
+  - web:web
